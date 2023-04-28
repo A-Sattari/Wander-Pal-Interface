@@ -1,0 +1,25 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  errors:
+    todo: ignore
+
+linter:
+  rules:
+    - empty_catches
+    - library_names
+    - prefer_is_empty
+    - avoid_empty_else
+    - camel_case_types
+    - prefer_final_fields
+    - prefer_double_quotes
+    - avoid_catching_errors
+    - slash_for_doc_comments
+    - always_declare_return_types
+    - avoid_redundant_argument_values
+    - avoid_catches_without_on_clauses
+    - unnecessary_brace_in_string_interps
+    - leading_newlines_in_multiline_strings
+    - curly_braces_in_flow_control_structures
+    - prefer_const_constructors_in_immutables
+    - prefer_const_literals_to_create_immutables
