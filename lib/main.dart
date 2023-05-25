@@ -1,20 +1,36 @@
+import "firebase_options.dart";
 import "package:flutter/material.dart";
-import "package:wander_pal/presentation/gathering/gathering_page.dart";
+import "package:firebase_core/firebase_core.dart";
+import "package:graphql_flutter/graphql_flutter.dart";
+import "package:wander_pal/presentation/authentication/login_page.dart";
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final GraphQLClient graphQLClient = GraphQLClient(
+    link: HttpLink("https://music-mates-fun.herokuapp.com/graphql"),
+    cache: GraphQLCache(),
+  );
+
+  late final client = ValueNotifier<GraphQLClient>(graphQLClient);
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: "Wander Pal",
-        theme: ThemeData(useMaterial3: true),
-        home: Container(
-          margin: EdgeInsets.only(top: 50),
-          child: Scaffold(body: const GatheringPage())));
+    return GraphQLProvider(
+        client: client,
+        child: MaterialApp(
+            title: "Wander Pal",
+            theme: ThemeData(useMaterial3: true),
+            home: Container(
+              // margin: EdgeInsets.only(top: 50),
+              // child: Scaffold(body: const GatheringPage())));
+              child: LoginPage(),
+            )));
   }
 }
