@@ -1,3 +1,4 @@
+import "package:wander_pal/models/traveler.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:google_sign_in/google_sign_in.dart";
 import "package:wander_pal/services/api_client.dart";
@@ -18,14 +19,15 @@ class AccountService {
         firstName
         lastName
         about
+        dateOfBirth
         languages
       }
     }
     """;
 
-    final user = await apiClient.queryGraphQL(query: userQuery, token: idpToken);
-    if (user == null) { // Create user
-      String userMutation = 
+    final travelerJson = await apiClient.queryGraphQL(query: userQuery, token: idpToken);
+    if (travelerJson == null) { // Create user
+      String travelerMutation = 
       """
       mutation {
         singUp(input: {
@@ -42,8 +44,10 @@ class AccountService {
         }
       }
       """;
-      var r = apiClient.mutateGraphQL(query: userMutation, token: idpToken);
+      final t = apiClient.mutateGraphQL(query: travelerMutation, token: idpToken);
     }
+
+    final traveler = Traveler.fromJson(travelerJson);
   }
 
   Future<UserCredential> signInWithGoogle() async {
