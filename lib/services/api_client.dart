@@ -7,7 +7,7 @@ final apiClientProvider = Provider((ref) => APIClient());
 class APIClient {
 
   Future<dynamic> queryGraphQL({required String query, required String token}) async {
-    var client = _getGraphQLClient(token);
+    var client = _getGraphQLClient(token); // Late final?
 
     var result = await client.query(QueryOptions(
         document: gql(query),
