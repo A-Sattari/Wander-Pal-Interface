@@ -1,4 +1,7 @@
 import "package:graphql_flutter/graphql_flutter.dart";
+import "package:riverpod_annotation/riverpod_annotation.dart";
+
+final apiClientProvider = Provider((ref) => APIClient());
 
 //TODO: No need to pass "Query {} or Mutation {}"
 class APIClient {
@@ -27,6 +30,7 @@ class APIClient {
     return result.data?.values.toList()[1];
   }
 
+  //TODO: This object must be created only once
   GraphQLClient _getGraphQLClient(String idpToken) {
     final HttpLink httpLink = HttpLink("http://10.0.2.2:5230/graphql");
     final AuthLink authLink = AuthLink(getToken: () => "Bearer $idpToken");
