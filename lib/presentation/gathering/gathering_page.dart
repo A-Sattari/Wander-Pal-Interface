@@ -1,16 +1,28 @@
 import "package:flutter/material.dart";
+import "package:flutter_riverpod/flutter_riverpod.dart";
+import "package:wander_pal/services/gathering_service.dart";
 import "package:wander_pal/presentation/gathering/gatherings_highlight_list.dart";
 
-class GatheringPage extends StatefulWidget {
+class GatheringPage extends ConsumerStatefulWidget {
   const GatheringPage({super.key});
 
   @override
-  State<GatheringPage> createState() => _GatheringPageState();
+  ConsumerState createState() => _GatheringPageState();
 }
 
-class _GatheringPageState extends State<GatheringPage> {
+class _GatheringPageState extends ConsumerState<GatheringPage> {
+  @override
+  void initState() {
+    super.initState();
+    // "ref" can be used in all life-cycles of a StatefulWidget.
+    ref.read(gatheringServiceProvider);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final gatheringService = ref.read(gatheringServiceProvider);
+    gatheringService.getAttendees();
+
     return Column(
       children: [
         Flexible(
