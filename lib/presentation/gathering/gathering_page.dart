@@ -56,6 +56,40 @@ class _GatheringPageState extends ConsumerState<GatheringPage> {
                   child: const Text("See more"),
                   onPressed: () {},
                 ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Left button & Text
+                      Column(
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: const CircleBorder(),
+                                padding: const EdgeInsets.all(20)),
+                            child: const Icon(Icons.tune, size: 30),
+                            onPressed: () {},
+                          ),
+                          const Text("Manage"),
+                        ],
+                      ),
+                      // Right button and Text
+                      Column(
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                shape: const CircleBorder(),
+                                padding: const EdgeInsets.all(20)),
+                            child: const Icon(Icons.add, size: 30),
+                            onPressed: () {},
+                          ),
+                          const Text("Create"),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -65,20 +99,19 @@ class _GatheringPageState extends ConsumerState<GatheringPage> {
   }
 
   BoxDecoration _getBottomSectionDesign() {
-    return 
-      BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, -10),
-          ),
-        ],
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
+    return BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 10,
+          offset: const Offset(0, -10),
         ),
-      );
+      ],
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(30),
+        topRight: Radius.circular(30),
+      ),
+    );
   }
 }
