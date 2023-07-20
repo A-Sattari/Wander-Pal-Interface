@@ -4,6 +4,8 @@ import "package:google_sign_in/google_sign_in.dart";
 import "package:wander_pal/services/api_client.dart";
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:riverpod_annotation/riverpod_annotation.dart";
+import "package:wander_pal/graphQL/queries/user_queries.dart";
+import "package:wander_pal/graphQL/mutations/user_mutations.dart";
 import "package:flutter_facebook_auth/flutter_facebook_auth.dart";
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
 
@@ -18,36 +20,13 @@ class AccountService {
     final idpToken = await authUser!.getIdToken();
     const FlutterSecureStorage().write(key: APIClient.idpTokenKey, value: idpToken);
 
-    String userQuery =
-    """
-    user {
-      id
-      firstName
-      lastName
-      about
-      dateOfBirth
-      languages
-    }
-    """;
+    final userQuery = UserQueries.getAccount();
+    final travelerJson = await apiClient.queryGraphQL(documentQuery: userQuery);
 
-    final travelerJson = await apiClient.queryGraphQL(query: userQuery);
     if (travelerJson == null) { // Create user
-      String travelerMutation = 
-      """
-      singUp(input: {
-        user: {
-          firstName: "Nono"
-          lastName: "Bomo"
-          dateOfBirth: "2000-02-12"
-          about: "Hola"
-        }
-      })
-
-      {
-        long
-      }
-      """;
-      final t = apiClient.mutateGraphQL(query: travelerMutation);
+      var traveler = Traveler(1, "firstName", "lastName", DateTime.now(), "about", []);
+      String travelerMutation = UserMutations.signUpTraveler(traveler);
+      final t = apiClient.mutateGraphQL(documentQuery: travelerMutation);
     }
 
     final traveler = Traveler.fromJson(travelerJson);
