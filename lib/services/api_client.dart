@@ -7,12 +7,12 @@ class APIClient {
   static const String idpTokenKey = "Bearer Token";
   GraphQLClient? _gqlClient;
 
-  Future<dynamic> queryGraphQL({required String query}) async {
+  Future<dynamic> queryGraphQL({required String documentQuery, Map<String, dynamic> vars = const {}}) async {
     _gqlClient ??= await _getGraphQLClient();
-    final documentQuery = "query {$query}";
 
     var result = await _gqlClient!.query(QueryOptions(
         document: gql(documentQuery),
+        variables: vars,
         fetchPolicy: FetchPolicy.cacheAndNetwork
       )
     );
@@ -20,12 +20,12 @@ class APIClient {
     return result.data?.values.toList()[1];
   }
 
-  Future<dynamic> mutateGraphQL({required String query}) async {
+  Future<dynamic> mutateGraphQL({required String documentQuery, Map<String, dynamic> vars = const {}}) async {
     _gqlClient ??= await _getGraphQLClient();
-    final documentQuery = "mutation {$query}";
 
     var result = await _gqlClient!.mutate(MutationOptions(
         document: gql(documentQuery),
+        variables: vars,
         fetchPolicy: FetchPolicy.cacheAndNetwork
       )
     );
