@@ -21,7 +21,7 @@ class _GatheringPageState extends ConsumerState<GatheringPage> {
   @override
   Widget build(BuildContext context) {
     final gatheringService = ref.read(gatheringServiceProvider);
-    gatheringService.getAttendees();
+    gatheringService.getAttendees(1);
 
     return Column(
       children: [
