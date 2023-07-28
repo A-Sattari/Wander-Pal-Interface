@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.wander_pal">
    <application
-        android:label="wander_pal"
+        android:label="Wander Pal"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
