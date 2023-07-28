@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
-import "package:wander_pal/models/discussion.dart";
-import "package:wander_pal/models/discussion_category.dart";
-import "package:wander_pal/presentation/forum/discussion_card.dart";
+import "package:wander_pal/presentation/forum/forum_page.dart";
 import "package:wander_pal/presentation/gathering/gathering_page.dart";
 import "package:wander_pal/presentation/authentication/login_page.dart";
 
@@ -43,10 +41,7 @@ class _MainNavigationBarState extends State<MainNavigationBar> {
       body: <Widget>[
         const LoginPage(),
         const GatheringPage(),
-        Container(
-          alignment: Alignment.center,
-          child: DiscussionCard(Discussion(1, 110, DiscussionCategory(1, "Question"), "IRI", "Bandar Abbas", "How do you guys survive there with such humidity? 🥸")),
-        ),
+        const ForumPage(),
       ][currentPageIndex],
     );
   }
