@@ -12,7 +12,9 @@ class ForumPage extends ConsumerStatefulWidget {
   ConsumerState createState() => _ForumPageState();
 }
 
-class _ForumPageState extends ConsumerState<ForumPage> with TickerProviderStateMixin {
+class _ForumPageState extends ConsumerState<ForumPage>
+    with TickerProviderStateMixin {
+
   final _scrollController = ScrollController();
   late TabController _tabController;
   bool _isScrolledDown = false;
@@ -20,7 +22,7 @@ class _ForumPageState extends ConsumerState<ForumPage> with TickerProviderStateM
   @override
   void initState() {
     super.initState();
-    
+
     _tabController = TabController(length: 2, vsync: this);
 
     _tabController.addListener(() {
@@ -30,7 +32,7 @@ class _ForumPageState extends ConsumerState<ForumPage> with TickerProviderStateM
         }
       });
     });
-    
+
     _scrollController.addListener(() {
       setState(() {
         if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
@@ -91,17 +93,15 @@ class _ForumPageState extends ConsumerState<ForumPage> with TickerProviderStateM
     List<Widget> discussions = List.generate(
       20,
       (index) => DiscussionCard(Discussion(
-        index,
-        11,
-        DiscussionCategory(index, "Make Connection"),
-        "IRI",
-        "Ahvaz",
-        "Here is the content" * index)
-      ),
+          index,
+          11,
+          DiscussionCategory(index, "Make Connection"),
+          "IRI",
+          "Ahvaz",
+          "Here is the content" * index)),
     );
 
-    return SingleChildScrollView
-    (
+    return SingleChildScrollView(
       controller: _scrollController,
       child: Column(children: discussions),
     );
@@ -109,29 +109,120 @@ class _ForumPageState extends ConsumerState<ForumPage> with TickerProviderStateM
 
   Widget _createFilterBarWidget() {
     return SizedBox(
-        height: 40.0,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton.icon(
-              onPressed: () {},
-              label: const Text("City"),
-              icon: const Icon(Icons.arrow_drop_down),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(0, 30),
-              ),
+      height: 40.0,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton.icon(
+            onPressed: () {
+              _createCityFilterWidget();
+            },
+            label: const Text("City"),
+            icon: const Icon(Icons.arrow_drop_down),
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(0, 30),
             ),
-            ElevatedButton.icon(
-              onPressed: () {},
-              label: const Text("Sort: " "Newest"),
-              icon: const Icon(Icons.arrow_drop_down),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(0, 30),
-              ),
+          ),
+          ElevatedButton.icon(
+            onPressed: () async {
+              _createSortPopupWidget();
+            },
+            label: const Text("Sort: " "Newest"),
+            icon: const Icon(Icons.arrow_drop_down),
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(0, 30),
             ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
+  }
+
+  //TODO: Fix: Selection state does not change unless search is selected
+  //TODO: In scroll, the green background is shown underneath the search bar
+  Future _createCityFilterWidget() {
+    List<String> items = List.generate(15, (index) => "City ${index + 1}");
+    List<String> selectedItems = [];
+    void toggleSelection(String item) {
+      setState(() {
+        if (selectedItems.contains(item)) {
+          selectedItems.remove(item);
+        } else {
+          selectedItems.add(item);
+        }
+      });
+    }
+
+    return showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(15.0)),
+      ),
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: MediaQuery.of(context).size.height / 2,
+          child: ClipRRect(
+            borderRadius:
+                const BorderRadius.vertical(top: Radius.circular(25.0)),
+            child: Column(
+              children: [
+                const Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: "Search",
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(vertical: 5.0),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  // Use ListView.separated instead of ListView.builder
+                  child: ListView.separated(
+                    itemCount: items.length,
+                    // Use separatorBuilder to create a Divider widget between each item
+                    separatorBuilder: (context, index) => const Divider(),
+
+                    itemBuilder: (context, index) {
+                      String item = items[index];
+                      return GestureDetector(
+                        onTap: () {
+                          toggleSelection(item);
+                        },
+                        child: ListTile(
+                          title: Text(item),
+                          // Set the selected property to true if the item is in the selected list
+                          selected: selectedItems.contains(item),
+                          // Set the selected tile color to green
+                          selectedTileColor: Colors.green,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future _createSortPopupWidget() {
+    const List<String> list = <String>["One", "Two", "Three", "Four"];
+
+    return showMenu<String>(
+      context: context,
+      position: const RelativeRect.fromLTRB(250, 120, 100, 100),
+      items: list.map((String item) {
+        return PopupMenuItem<String>(
+          value: item,
+          child: Text(item),
+        );
+      }).toList(),
+    );
   }
 
   Widget _createTabBarWidget() {
@@ -146,7 +237,8 @@ class _ForumPageState extends ConsumerState<ForumPage> with TickerProviderStateM
               Tab(text: "Globe"),
               Tab(text: "Canada"),
             ],
-            labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            labelStyle:
+                const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
         InkWell(
@@ -172,8 +264,8 @@ class _ForumPageState extends ConsumerState<ForumPage> with TickerProviderStateM
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             padding: _isScrolledDown
-              ? const EdgeInsets.all(15)
-              : const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+                ? const EdgeInsets.all(15)
+                : const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
           ),
           child: Visibility(
             visible: !_isScrolledDown,
@@ -200,8 +292,8 @@ class _ForumPageState extends ConsumerState<ForumPage> with TickerProviderStateM
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             padding: _isScrolledDown
-              ? const EdgeInsets.all(15)
-              : const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+                ? const EdgeInsets.all(15)
+                : const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
           ),
           child: Visibility(
             visible: !_isScrolledDown,
